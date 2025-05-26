@@ -2,14 +2,31 @@
 #include "pico/cyw43_arch.h"           // Biblioteca para controle do chip Wi-Fi CYW43 no Raspberry Pi Pico W
 #include <stdio.h>                     // Biblioteca padrão de entrada/saída (para usar printf)
 
+// Defin. dos pinos dos leds de visibilidade:
+#define LED_RED_PIN 13 
+#define LED_BLUE_PIN 12     
+#define LED_GREEN_PIN 11    
+
 /**
  * Função: connect_to_wifi
  * Objetivo: Inicializar o chip Wi-Fi da Pico W e conectar a uma rede usando SSID e senha fornecidos.
  */
-void connect_to_wifi(const char *ssid, const char *password) {
+void connect_to_wifi(const char *ssid, const char *password) 
+{
+    gpio_init(LED_RED_PIN);
+    gpio_set_dir(LED_RED_PIN, GPIO_OUT);
+    
+    gpio_init(LED_GREEN_PIN);
+    gpio_set_dir(LED_GREEN_PIN, GPIO_OUT);
+    
+    gpio_init(LED_BLUE_PIN);
+    gpio_set_dir(LED_BLUE_PIN, GPIO_OUT);
+    
     // Inicializa o driver Wi-Fi (CYW43). Retorna 0 se for bem-sucedido.
-    if (cyw43_arch_init()) {
+    if (cyw43_arch_init()) 
+    {
         printf("Erro ao iniciar Wi-Fi\n");
+        gpio_put(LED_GREEN_PIN,false);
         return;
     }
 
@@ -18,9 +35,13 @@ void connect_to_wifi(const char *ssid, const char *password) {
 
     // Tenta conectar à rede Wi-Fi com um tempo limite de 30 segundos (30000 ms).
     // Utiliza autenticação WPA2 com criptografia AES.
-    if (cyw43_arch_wifi_connect_timeout_ms(ssid, password, CYW43_AUTH_WPA2_AES_PSK, 30000)) {
+    if (cyw43_arch_wifi_connect_timeout_ms(ssid, password, CYW43_AUTH_WPA2_AES_PSK, 30000)) 
+    {
         printf("Erro ao conectar\n");  // Se falhar, imprime mensagem de erro.
-    } else {        
+        gpio_put(LED_RED_PIN,false);
+    } 
+    else 
+    {        
         printf("Conectado ao Wi-Fi\n");  // Se conectar com sucesso, exibe confirmação.
     }
 }
