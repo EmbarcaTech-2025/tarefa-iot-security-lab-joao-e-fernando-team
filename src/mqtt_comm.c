@@ -78,7 +78,8 @@ static void mqtt_pub_request_cb(void *arg, err_t result) {
  *   - topic: nome do tópico (ex: "sensor/temperatura")
  *   - data: payload da mensagem (bytes)
  *   - len: tamanho do payload */
-void mqtt_comm_publish(const char *topic, const uint8_t *data, size_t len) {
+void mqtt_comm_publish(const char *topic, const uint8_t *data, size_t len) 
+{
     // Envia a mensagem MQTT
     err_t status = mqtt_publish(
         client,              // Instância do cliente
@@ -86,12 +87,13 @@ void mqtt_comm_publish(const char *topic, const uint8_t *data, size_t len) {
         data,                // Dados a serem enviados
         len,                 // Tamanho dos dados
         0,                   // QoS 0 (nenhuma confirmação)
-        0,                   // Não reter mensagem
+        1,                   // Não reter mensagem
         mqtt_pub_request_cb, // Callback de confirmação
         NULL                 // Argumento para o callback
     );
 
-    if (status != ERR_OK) {
+    if (status != ERR_OK) 
+    {
         printf("mqtt_publish falhou ao ser enviada: %d\n", status);
     }
 }
